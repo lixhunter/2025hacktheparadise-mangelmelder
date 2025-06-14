@@ -1,0 +1,13 @@
+{
+  "title": "#14229-2024",
+  "service_request_id": "14229",
+  "description": "<p>Hier zw Haltestelle Jenzigweg und Abzweig Pestalozzistr Stadtauswärts sind die Gully auf den Gehweg alle verstopft nach dem gestrigen Regen.</p>\n",
+  "media_url": "",
+  "service_name": "Straße/Gehweg/Radweg",
+  "service_code": "12_straße_gehweg_radweg",
+  "processing_status": "Geschlossen",
+  "geolocation_latitude": "50.933404303918",
+  "geolocation_longitude": "11.609794306358",
+  "requested_datetime": "<time datetime=\"2024-06-19T10:15:48+02:00\">2024-06-19T10:15:48+0200</time>\n",
+  "updated_datetime": "<time datetime=\"2024-06-21T06:21:39+02:00\">2024-06-21T06:21:39+0200</time>\n"
+}
