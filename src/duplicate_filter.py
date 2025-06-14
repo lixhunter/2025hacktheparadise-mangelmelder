@@ -9,7 +9,9 @@ from math import radians, sin, cos, atan2, sqrt
 from src.generate_with_llama3 import generate_with_llama3
 
 new_request = f"#{sys.argv[1]}"
-
+global_radius_meters = 300
+global_days = 14
+global_similarity_threshold = 0.65
 
 def get_request_dict(request_id):
     req_dict: dict
@@ -35,7 +37,7 @@ def duplicate_prefilter(newReport: Dict) -> List[Dict]:
     recent_reports = filter_by_timeSpan(reports)
 
     near_reports = filter_by_radius(newReport, recent_reports,
-                                    radius_meters=300)
+                                    radius_meters=global_radius_meters)
 
     return near_reports
 
@@ -49,7 +51,7 @@ def extract_datetime(text) -> datetime.datetime:
 
 def filter_by_timeSpan(entries: List[Dict]) -> List[Dict]:
     now = datetime.datetime.now(datetime.timezone.utc)
-    two_months_ago = now - datetime.timedelta(days=14)
+    two_months_ago = now - datetime.timedelta(days=global_days)
 
     return [item for item in entries
             if extract_datetime(item['requested_datetime']) is not None
@@ -104,7 +106,13 @@ def similarity_score(param, param1) -> float:
              f"Text 1: \n\"\"\"{param}\n\"\"\"\n\n" \
              f"Text 2: \n\"\"\"{param1}\n\"\"\"\n\n" \
              f"Gib einen Float-Wert zwischen 0 und 1 zurück, wobei 0 keine Beziehung und 1 das gleiche Problem beschreibt.\n" \
-             f"Beachte: Antworte nur mit der Float-Zahl, ohne Kommentare."
+             f"Wenn die Texte inhaltlich identisch oder nahezu identisch sind, gib immer 1.0 zurück.\n" \
+             f"Beispiel:\n" \
+             f"Text 1: \"Die Lampe ist defekt.\"\n" \
+             f"Text 2: \"Die Lampe ist defekt.\"\n" \
+             f"Antwort: 1.0\n\n" \
+             f"Antworte nur mit der Float-Zahl, ohne Kommentare.\n"
+
     result = generate_with_llama3(prompt)
     #print (f"Similarity score prompt: {prompt}")
     result_float = float(result.strip())
@@ -122,7 +130,7 @@ def run(request_id):
                     "id": result["title"][1:]} for result in prefiltered]
 
     filtered_duplicates = [
-        dup for dup in duplicates if dup["score"] > 0.65
+        dup for dup in duplicates if dup["score"] > global_similarity_threshold
     ]
 
     sorted_duplicates = sorted(filtered_duplicates, key=lambda x: x["score"],
