@@ -48,7 +48,7 @@ def pixelate_faces(image, model):
     return image
 
 def complete(input_path):
-    output_path = inputFile + "_blurred.jpg",
+    output_path = input_path + "_blurred.jpg",
     model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
 
     # YOLOv5 Modell laden (nur einmal)
@@ -82,7 +82,7 @@ def complete(input_path):
     # Ergebnis speichern
     cv2.imwrite(output_path, image)
     print(f"Bild mit geschwärzten Nummernschildern und verpixelten Gesichtern gespeichert unter: {output_path}")
-    return output_path
+    return image
 
 
 if __name__ == "__main__":
