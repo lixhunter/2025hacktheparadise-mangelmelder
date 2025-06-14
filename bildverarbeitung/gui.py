@@ -4,8 +4,7 @@ from PIL import Image, ImageTk
 import cv2
 import complete  # dein Modul, z. B. complete.py mit pixelate und blackout
 
-# Funktion zum Anzeigen eines OpenCV-Bildes in einem Tkinter-Label
-def show_image_on_label(cv_image, label, max_width=400, max_height=300):
+def show_image_on_label(cv_image, label, max_width=700, max_height=500):
     if cv_image is None:
         return
     rgb_image = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
@@ -22,43 +21,35 @@ def show_image_on_label(cv_image, label, max_width=400, max_height=300):
     label.config(image=tk_image)
     label.image = tk_image 
 
-# Callback für Button
 def open_file():
     file_path = filedialog.askopenfilename(
         title="Bild auswählen",
         filetypes=(("Bilddateien", "*.jpeg *.jpg *.png"), ("Alle Dateien", "*.*"))
     )
     if file_path:
-        # Originalbild anzeigen
         original = cv2.imread(file_path)
         show_image_on_label(original, label_original)
 
-        # Ausgabepfad
-        output_path = file_path.replace(".", "_processed.", 1)
-
-        # Bild verarbeiten und anzeigen
         result_image = complete.complete(file_path)
         show_image_on_label(result_image, label_processed)
 
-# Fenster
 root = tk.Tk()
 root.title("Nummernschilder & Gesichter anonymisieren")
-root.geometry("850x700")
+root.geometry("1500x700")  # Größeres Fenster
 
-# Button
 button = tk.Button(root, text="Bild auswählen", command=open_file)
-button.pack(pady=10)
+button.grid(row=0, column=0, columnspan=2, pady=10)
 
-# Labels für Vorher/Nachher
 label_original_text = tk.Label(root, text="Originalbild")
-label_original_text.pack()
-label_original = tk.Label(root)
-label_original.pack()
+label_original_text.grid(row=1, column=0)
 
 label_processed_text = tk.Label(root, text="Bearbeitetes Bild")
-label_processed_text.pack()
-label_processed = tk.Label(root)
-label_processed.pack()
+label_processed_text.grid(row=1, column=1)
 
-# Starte GUI
+label_original = tk.Label(root)
+label_original.grid(row=2, column=0, padx=10)
+
+label_processed = tk.Label(root)
+label_processed.grid(row=2, column=1, padx=10)
+
 root.mainloop()

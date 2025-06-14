@@ -49,7 +49,7 @@ def pixelate_faces(image, model):
 
 def complete(input_path):
     output_path = input_path + "_blurred.jpg",
-    model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
+    model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Modelle/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
 
     # YOLOv5 Modell laden (nur einmal)
     model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
@@ -61,9 +61,9 @@ def complete(input_path):
         exit(1)
 
 
-    image_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/personen/20250614_144511.jpg.jpeg"
-    output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/personen/output.jpeg"
-    weights_path_face = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/yolov8n-face.pt"
+    image_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Testbilder/personen/20250614_144511.jpg.jpeg"
+    output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Testbilder/spersonen/output.jpeg"
+    weights_path_face = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Modelle/yolov8n-face.pt"
 
     # YOLOv8 Modell laden (auch wenn Dateiname "yolov5s-face.pt" heißt, bitte sicherstellen, dass es ein YOLOv8-kompatibles Modell ist)
     model_face = YOLO(weights_path_face)
@@ -88,7 +88,7 @@ def complete(input_path):
 if __name__ == "__main__":
     input_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/personen/20250614_144511.jpg.jpeg"
     output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/fahrzeuge/output_blackout_pixelate.jpeg"
-    model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
+    model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Modelle/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
 
     # YOLOv5 Modell laden (nur einmal)
     model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     image = blackout_license_plates_yolov5(image, model)
 
     # Gesichter verpixeln
-    weights_path_face = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/yolov8n-face.pt"
+    weights_path_face = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Modelle/yolov8n-face.pt"
 
     # YOLOv8 Modell laden (auch wenn Dateiname "yolov5s-face.pt" heißt, bitte sicherstellen, dass es ein YOLOv8-kompatibles Modell ist)
     model_face = YOLO(weights_path_face)
