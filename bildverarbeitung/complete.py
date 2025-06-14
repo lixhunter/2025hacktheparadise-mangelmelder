@@ -1,6 +1,7 @@
 import cv2
 import torch
 import ssl
+from ultralytics import YOLO
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -19,16 +20,31 @@ def blackout_license_plates_yolov5(image, model):
             image[y_min:y_max, x_min:x_max] = 0
     return image
 
-def pixelate_faces(image):
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+def pixelate_faces(image, model):
+    # YOLOv8 gibt standardmäßig Ergebnisse in results.boxes
+    # Bei YOLOv8: results.boxes.xyxy, results.boxes.conf, results.boxes.cls
+    results = model(image)  # Bild übergeben
 
-    for (x, y, w, h) in faces:
-        face = image[y:y+h, x:x+w]
-        face = cv2.resize(face, (10, 10), interpolation=cv2.INTER_LINEAR)
-        face = cv2.resize(face, (w, h), interpolation=cv2.INTER_NEAREST)
-        image[y:y+h, x:x+w] = face
+    # Annahme: 1. Bild im Batch (meist nur ein Bild)
+    detections = results[0].boxes  # boxes Objekt mit xyxy, conf, cls
+
+    for box in detections:
+        x_min, y_min, x_max, y_max = map(int, box.xyxy[0].tolist())
+        conf = float(box.conf[0])
+        cls = int(box.cls[0])
+
+        # Gesichter mit Konfidenz > 0.5 pixeln
+        if conf > 0.5:
+            face = image[y_min:y_max, x_min:x_max]
+
+            if face.size == 0:
+                continue
+
+            # Pixelate: Runterskalieren und wieder hochskalieren
+            face = cv2.resize(face, (5, 5), interpolation=cv2.INTER_LINEAR)
+            face = cv2.resize(face, (x_max - x_min, y_max - y_min), interpolation=cv2.INTER_NEAREST)
+            image[y_min:y_max, x_min:x_max] = face
+
     return image
 
 def complete(input_path):
@@ -44,11 +60,24 @@ def complete(input_path):
         print("Fehler: Bild konnte nicht geladen werden.")
         exit(1)
 
+
+    image_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/personen/20250614_144511.jpg.jpeg"
+    output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/personen/output.jpeg"
+    weights_path_face = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/yolov8n-face.pt"
+
+    # YOLOv8 Modell laden (auch wenn Dateiname "yolov5s-face.pt" heißt, bitte sicherstellen, dass es ein YOLOv8-kompatibles Modell ist)
+    model_face = YOLO(weights_path_face)
+
+    
+
+    image = pixelate_faces(image, model_face)
+    cv2.imwrite(output_path, image)
+    print(f"Bild mit verpixelten Gesichtern gespeichert: {output_path}")    
+
     # Nummernschilder schwärzen
     image = blackout_license_plates_yolov5(image, model)
 
-    # Gesichter verpixeln
-    image = pixelate_faces(image)
+    
 
     # Ergebnis speichern
     cv2.imwrite(output_path, image)
@@ -74,7 +103,11 @@ if __name__ == "__main__":
     image = blackout_license_plates_yolov5(image, model)
 
     # Gesichter verpixeln
-    image = pixelate_faces(image)
+    weights_path_face = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/yolov8n-face.pt"
+
+    # YOLOv8 Modell laden (auch wenn Dateiname "yolov5s-face.pt" heißt, bitte sicherstellen, dass es ein YOLOv8-kompatibles Modell ist)
+    model_face = YOLO(weights_path_face)
+    image = pixelate_faces(image, model_face)
 
     # Ergebnis speichern
     cv2.imwrite(output_path, image)
