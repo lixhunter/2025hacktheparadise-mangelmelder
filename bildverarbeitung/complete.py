@@ -32,7 +32,7 @@ def pixelate_faces(image):
     return image
 
 def complete(input_path):
-    output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/fahrzeuge/output_blackout_pixelate.jpeg"
+    output_path = inputFile + "_blurred.jpg",
     model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
 
     # YOLOv5 Modell laden (nur einmal)
