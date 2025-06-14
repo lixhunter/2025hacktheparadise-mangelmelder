@@ -16,13 +16,12 @@ def get_request_dict(request_id):
 
     print(request_id[1:])
     with open(f"../data/cloud-jena/maengel/{request_id[1:]}.json", "r") as file:
-        ##with open(f"data/duplicates/{request_id[1:]}.json", "r") as file:
         req_dict = json.load(file)
 
     return req_dict
 
 
-def dublicate_prefilter(newReport: Dict) -> List[Dict]:
+def duplicate_prefilter(newReport: Dict) -> List[Dict]:
     directory = "../data/cloud-jena/maengel"
 
     files = [f for f in os.listdir(directory) if f.endswith('.json')]
@@ -41,8 +40,6 @@ def dublicate_prefilter(newReport: Dict) -> List[Dict]:
     return near_reports
 
 
-# TODO: if duplicate_prefilter returns something, send to llm for final duplicate check
-
 def extract_datetime(text) -> datetime.datetime:
     match = re.search(r'datetime=\"([^\"]+)\"', text)
     if match:
@@ -52,7 +49,7 @@ def extract_datetime(text) -> datetime.datetime:
 
 def filter_by_timeSpan(entries: List[Dict]) -> List[Dict]:
     now = datetime.datetime.now(datetime.timezone.utc)
-    two_months_ago = now - datetime.timedelta(days=400)
+    two_months_ago = now - datetime.timedelta(days=14)
 
     return [item for item in entries
             if extract_datetime(item['requested_datetime']) is not None
@@ -103,39 +100,34 @@ def similarity_score(param, param1) -> float:
     """Calculate a similarity score between two strings.
     :returns: similarity score between 0 and 1
     """
-    # generate_with_llama3("Hello World!")
-    prompt = f"Score whether or not the two strings describe the same problem:\n\n" \
-             f"String 1: \n\"\"\"{param}\n\"\"\"\n\n" \
-             f"String 2: \n\"\"\"{param1}\n\"\"\"\n\n" \
-             f"Return a float value between 0 and 1, where 0 means no relation and 1 means same problem is describe.\n" \
-             f"Important: Answer only with the float number, dont add any comments."
     prompt = f"Bewerte ob die folgenden beiden Texte den gleichen Mangel beschreiben:\n\n" \
              f"Text 1: \n\"\"\"{param}\n\"\"\"\n\n" \
              f"Text 2: \n\"\"\"{param1}\n\"\"\"\n\n" \
              f"Gib einen Float-Wert zwischen 0 und 1 zurück, wobei 0 keine Beziehung und 1 das gleiche Problem beschreibt.\n" \
              f"Beachte: Antworte nur mit der Float-Zahl, ohne Kommentare."
     result = generate_with_llama3(prompt)
-    print (f"Similarity score prompt: {prompt}")
+    #print (f"Similarity score prompt: {prompt}")
     result_float = float(result.strip())
-    print (f"Similarity score result: {result_float}")
+    #print (f"Similarity score result: {result_float}")
     return result_float if 0 <= result_float <= 1 else 0.0
 
 
 def run(request_id):
     new_request = get_request_dict(request_id)
 
-    prefiltered = dublicate_prefilter(new_request)[:30]
+    prefiltered = duplicate_prefilter(new_request)
 
-    # TODO: setze einen Prompt bei der LLM auf, der die potenziellen Duplikate überprüft
-    ## create a list comprehension of prefiltered requests with their similarity scores
     duplicates = [{"score": similarity_score(new_request["description"],
                                             result["description"]),
                     "id": result["title"][1:]} for result in prefiltered]
+
     filtered_duplicates = [
-        dup for dup in duplicates if dup["score"] > 0.1
+        dup for dup in duplicates if dup["score"] > 0.65
     ]
+
     sorted_duplicates = sorted(filtered_duplicates, key=lambda x: x["score"],
                                reverse=True)
+
     top_duplicates = sorted_duplicates[:5]
 
     print(top_duplicates)
@@ -143,10 +135,6 @@ def run(request_id):
     print(
         f"Found {len(top_duplicates)} potential duplicates for request {request_id}:"
     )
-
-    # TODO: generiere einen Email Text, der darüber informiert, dass ein neuer Mangel
-    #  eingegangen ist (mit der Request ID) und dass es potenzielle Duplikate gibt.
-    #  Liste die IDs der potenziellen Duplikate auf.
 
     description = new_request['description']
     description_without_html = re.sub(r'<[^>]*>', '', description)
