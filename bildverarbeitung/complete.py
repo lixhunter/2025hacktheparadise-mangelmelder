@@ -53,7 +53,7 @@ def complete(input_path):
     # Ergebnis speichern
     cv2.imwrite(output_path, image)
     print(f"Bild mit geschwärzten Nummernschildern und verpixelten Gesichtern gespeichert unter: {output_path}")
-
+    return output_path
 
 
 if __name__ == "__main__":
