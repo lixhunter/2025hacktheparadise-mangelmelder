@@ -1,0 +1,13 @@
+{
+  "title": "#16777-2025",
+  "service_request_id": "16777",
+  "description": "<p>Auf dem Spielplatz würde dieses Spielgerät kaputt gemacht.</p>\n",
+  "media_url": "/system/files/styles/extra_large/private/2025-03/1000063116.jpg?itok=Hcvysocs",
+  "service_name": "Spielplatz/Sportanlage",
+  "service_code": "08_spielplatz_sportanlage",
+  "processing_status": "Geschlossen",
+  "geolocation_latitude": "50.9270353",
+  "geolocation_longitude": "11.5730617",
+  "requested_datetime": "<time datetime=\"2025-03-15T16:28:22+01:00\">2025-03-15T16:28:22+0100</time>\n",
+  "updated_datetime": "<time datetime=\"2025-03-17T07:45:27+01:00\">2025-03-17T07:45:27+0100</time>\n"
+}
