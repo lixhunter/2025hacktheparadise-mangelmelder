@@ -52,7 +52,7 @@ def extract_datetime(text) -> datetime.datetime:
 
 def filter_by_timeSpan(entries: List[Dict]) -> List[Dict]:
     now = datetime.datetime.now(datetime.timezone.utc)
-    two_months_ago = now - datetime.timedelta(days=60)
+    two_months_ago = now - datetime.timedelta(days=400)
 
     return [item for item in entries
             if extract_datetime(item['requested_datetime']) is not None
@@ -104,12 +104,21 @@ def similarity_score(param, param1) -> float:
     :returns: similarity score between 0 and 1
     """
     # generate_with_llama3("Hello World!")
-    prompt = f"Calculate a similarity score between the following two strings:\n\n" \
-             f"String 1: {param}\n" \
-             f"String 2: {param1}\n\n" \
-             f"Return a float value between 0 and 1, where 0 means no similarity and 1 means identical."
-#    result = generate_with_llama3(prompt)
-    return 1.0
+    prompt = f"Score whether or not the two strings describe the same problem:\n\n" \
+             f"String 1: \n\"\"\"{param}\n\"\"\"\n\n" \
+             f"String 2: \n\"\"\"{param1}\n\"\"\"\n\n" \
+             f"Return a float value between 0 and 1, where 0 means no relation and 1 means same problem is describe.\n" \
+             f"Important: Answer only with the float number, dont add any comments."
+    prompt = f"Bewerte ob die folgenden beiden Texte den gleichen Mangel beschreiben:\n\n" \
+             f"Text 1: \n\"\"\"{param}\n\"\"\"\n\n" \
+             f"Text 2: \n\"\"\"{param1}\n\"\"\"\n\n" \
+             f"Gib einen Float-Wert zwischen 0 und 1 zurück, wobei 0 keine Beziehung und 1 das gleiche Problem beschreibt.\n" \
+             f"Beachte: Antworte nur mit der Float-Zahl, ohne Kommentare."
+    result = generate_with_llama3(prompt)
+    print (f"Similarity score prompt: {prompt}")
+    result_float = float(result.strip())
+    print (f"Similarity score result: {result_float}")
+    return result_float if 0 <= result_float <= 1 else 0.0
 
 
 def run(request_id):
@@ -123,17 +132,13 @@ def run(request_id):
                                             result["description"]),
                     "id": result["title"][1:]} for result in prefiltered]
     filtered_duplicates = [
-        dup for dup in duplicates if dup["score"] > 0.5
+        dup for dup in duplicates if dup["score"] > 0.1
     ]
     sorted_duplicates = sorted(filtered_duplicates, key=lambda x: x["score"],
                                reverse=True)
     top_duplicates = sorted_duplicates[:5]
 
     print(top_duplicates)
-
-    if not prefiltered:
-        print("No duplicates found.")
-        return
 
     print(
         f"Found {len(top_duplicates)} potential duplicates for request {request_id}:"
@@ -142,6 +147,17 @@ def run(request_id):
     # TODO: generiere einen Email Text, der darüber informiert, dass ein neuer Mangel
     #  eingegangen ist (mit der Request ID) und dass es potenzielle Duplikate gibt.
     #  Liste die IDs der potenziellen Duplikate auf.
+
+    description = new_request['description']
+    description_without_html = re.sub(r'<[^>]*>', '', description)
+    message = f"Eine neue Meldung liegt vor:\n{description_without_html}\n"
+
+    if not top_duplicates:
+        print(message)
+    else:
+        duplicate_warning = "Potenzielle Duplikate gefunden:\n" + \
+                            "\n".join([item['id'] for item in top_duplicates])
+        print(message + duplicate_warning)
 
 
 if __name__ == "__main__":
