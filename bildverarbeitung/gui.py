@@ -6,7 +6,7 @@ from tkinter import filedialog
 def open_file():
     file_path = filedialog.askopenfilename(
         title="Select a File",
-        filetypes=(("Text Files", "*.txt"), ("All Files", "*.*"))
+        filetypes=(("Image Files", "*.jpeg"), ("All Files", "*.*"))
     )
     if file_path:  # Check if a file was selected
         complete.complete(file_path)

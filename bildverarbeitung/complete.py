@@ -31,6 +31,31 @@ def pixelate_faces(image):
         image[y:y+h, x:x+w] = face
     return image
 
+def complete(input_path):
+    output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/fahrzeuge/output_blackout_pixelate.jpeg"
+    model_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/Automatic-Number-Plate-Recognition-using-YOLOv5/Weights/best.pt"
+
+    # YOLOv5 Modell laden (nur einmal)
+    model = torch.hub.load('ultralytics/yolov5', 'custom', path=model_path, force_reload=True)
+
+    # Bild laden
+    image = cv2.imread(input_path)
+    if image is None:
+        print("Fehler: Bild konnte nicht geladen werden.")
+        exit(1)
+
+    # Nummernschilder schwärzen
+    image = blackout_license_plates_yolov5(image, model)
+
+    # Gesichter verpixeln
+    image = pixelate_faces(image)
+
+    # Ergebnis speichern
+    cv2.imwrite(output_path, image)
+    print(f"Bild mit geschwärzten Nummernschildern und verpixelten Gesichtern gespeichert unter: {output_path}")
+
+
+
 if __name__ == "__main__":
     input_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/personen/20250614_144511.jpg.jpeg"
     output_path = "/Users/aschulte-kroll/Downloads/HackTheParadise/2025hacktheparadise-mangelmelder/bildverarbeitung/fahrzeuge/output_blackout_pixelate.jpeg"
