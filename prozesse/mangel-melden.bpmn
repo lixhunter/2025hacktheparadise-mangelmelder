@@ -24,7 +24,7 @@
       <bpmn:outgoing>Flow_1sxdb6a</bpmn:outgoing>
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_0232jcg" sourceRef="Activity_1m9c860" targetRef="Activity_1ize067" />
-    <bpmn:task id="Activity_1cz3d2l" name="Mangel wird bearbetet">
+    <bpmn:task id="Activity_1cz3d2l" name="Mangel wird bearbeitet">
       <bpmn:incoming>Flow_1sxdb6a</bpmn:incoming>
       <bpmn:outgoing>Flow_1vtz970</bpmn:outgoing>
     </bpmn:task>
@@ -56,6 +56,18 @@ Rückfragen möglich, wenn Mail angegeben wurde</bpmn:text>
 Status ändern</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_129bhk6" associationDirection="None" sourceRef="Activity_1cz3d2l" targetRef="TextAnnotation_1jexxht" />
+    <bpmn:textAnnotation id="TextAnnotation_0i24gg9">
+      <bpmn:text>Status: eingegangen</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1psihqi" associationDirection="None" sourceRef="Activity_05i7ojy" targetRef="TextAnnotation_0i24gg9" />
+    <bpmn:textAnnotation id="TextAnnotation_02rxetp">
+      <bpmn:text>Status: veröffentlicht</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0nefzg9" associationDirection="None" sourceRef="Activity_1ize067" targetRef="TextAnnotation_02rxetp" />
+    <bpmn:textAnnotation id="TextAnnotation_0iuhwab">
+      <bpmn:text>Status: bearbeitet</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1qod21w" associationDirection="None" sourceRef="Activity_0k0syom" targetRef="TextAnnotation_0iuhwab" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_06k956i">
@@ -89,18 +101,30 @@ Status ändern</bpmn:text>
       <bpmndi:BPMNShape id="Event_0zom6gl_di" bpmnElement="Event_0zom6gl">
         <dc:Bounds x="1232" y="259" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_0v7492a_di" bpmnElement="Association_0v7492a">
-        <di:waypoint x="489" y="237" />
-        <di:waypoint x="504" y="170" />
+      <bpmndi:BPMNEdge id="Association_1psihqi_di" bpmnElement="Association_1psihqi">
+        <di:waypoint x="480" y="317" />
+        <di:waypoint x="480" y="360" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_129bhk6_di" bpmnElement="Association_129bhk6">
-        <di:waypoint x="960" y="237" />
-        <di:waypoint x="960" y="165" />
+      <bpmndi:BPMNEdge id="Association_0nefzg9_di" bpmnElement="Association_0nefzg9">
+        <di:waypoint x="800" y="317" />
+        <di:waypoint x="800" y="360" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Association_0u9x9hq_di" bpmnElement="Association_0u9x9hq">
-        <di:waypoint x="649" y="237" />
-        <di:waypoint x="659" y="190" />
+      <bpmndi:BPMNEdge id="Association_1qod21w_di" bpmnElement="Association_1qod21w">
+        <di:waypoint x="1120" y="317" />
+        <di:waypoint x="1120" y="360" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_1lpde52_di" bpmnElement="TextAnnotation_1lpde52">
+        <dc:Bounds x="450" y="130" width="160" height="40" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0363du9_di" bpmnElement="TextAnnotation_0363du9">
+        <dc:Bounds x="630" y="80" width="150" height="110" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_1jexxht_di" bpmnElement="TextAnnotation_1jexxht">
+        <dc:Bounds x="910" y="124" width="160" height="41" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_06dplgq_di" bpmnElement="Flow_06dplgq">
         <di:waypoint x="215" y="277" />
         <di:waypoint x="270" y="277" />
@@ -109,10 +133,6 @@ Status ändern</bpmn:text>
         <di:waypoint x="370" y="277" />
         <di:waypoint x="430" y="277" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_1lpde52_di" bpmnElement="TextAnnotation_1lpde52">
-        <dc:Bounds x="450" y="130" width="160" height="40" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_19hwkxj_di" bpmnElement="Flow_19hwkxj">
         <di:waypoint x="530" y="277" />
         <di:waypoint x="590" y="277" />
@@ -133,12 +153,28 @@ Status ändern</bpmn:text>
         <di:waypoint x="1170" y="277" />
         <di:waypoint x="1232" y="277" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_1jexxht_di" bpmnElement="TextAnnotation_1jexxht">
-        <dc:Bounds x="910" y="124" width="160" height="41" />
+      <bpmndi:BPMNEdge id="Association_0v7492a_di" bpmnElement="Association_0v7492a">
+        <di:waypoint x="489" y="237" />
+        <di:waypoint x="504" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_0u9x9hq_di" bpmnElement="Association_0u9x9hq">
+        <di:waypoint x="649" y="237" />
+        <di:waypoint x="659" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Association_129bhk6_di" bpmnElement="Association_129bhk6">
+        <di:waypoint x="960" y="237" />
+        <di:waypoint x="960" y="165" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0i24gg9_di" bpmnElement="TextAnnotation_0i24gg9">
+        <dc:Bounds x="430" y="360" width="99.99656781987919" height="40.637012630422845" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_0363du9_di" bpmnElement="TextAnnotation_0363du9">
-        <dc:Bounds x="630" y="80" width="150" height="110" />
+      <bpmndi:BPMNShape id="TextAnnotation_02rxetp_di" bpmnElement="TextAnnotation_02rxetp">
+        <dc:Bounds x="750" y="360" width="99.99656781987919" height="40.637012630422845" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_0iuhwab_di" bpmnElement="TextAnnotation_0iuhwab">
+        <dc:Bounds x="1070" y="360" width="99.99656781987919" height="40.637012630422845" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
