@@ -1,5 +1,7 @@
 import cv2
 import easyocr
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def blur_license_plate(image_path, output_path):
     # Lade das Bild
