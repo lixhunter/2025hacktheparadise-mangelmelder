@@ -35,8 +35,14 @@ def pixelate_faces(image, model):
 
         # Gesichter mit Konfidenz > 0.5 pixeln
         if conf > 0.5:
-            face = image[y_min:y_max, x_min:x_max]
-
+            offsetY = int(round((y_max-y_min) * 0.2) )
+            offsetX = int(round((x_max-x_min) * 0.2))
+            y_min=y_min-offsetY
+            y_max=y_max+offsetY
+            x_min=x_min-offsetX
+            x_max=x_max+offsetX
+            face = image[y_min-offsetY:y_max+offsetY, x_min-offsetX:x_max+offsetX]
+            
             if face.size == 0:
                 continue
 
